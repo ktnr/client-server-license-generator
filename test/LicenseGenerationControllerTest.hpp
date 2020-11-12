@@ -3,10 +3,10 @@
 
 #include "oatpp-test/UnitTest.hpp"
 
-class MyControllerTest : public oatpp::test::UnitTest {
+class LicenseGenerationControllerTest : public oatpp::test::UnitTest {
 public:
 
-  MyControllerTest() : UnitTest("TEST[MyControllerTest]"){}
+    LicenseGenerationControllerTest() : UnitTest("TEST[LicenseGenerationControllerTest]"){}
   void onRun() override;
 
 };

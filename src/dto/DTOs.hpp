@@ -10,13 +10,21 @@
  *  Data Transfer Object. Object containing fields only.
  *  Used in API for serialization/deserialization and validation
  */
-class MyDto : public oatpp::DTO {
+class LicenseRequestDto : public oatpp::DTO {
   
-  DTO_INIT(MyDto, DTO)
+  DTO_INIT(LicenseRequestDto, DTO)
   
-  DTO_FIELD(Int32, statusCode);
-  DTO_FIELD(String, message);
+  DTO_FIELD(String, hardwareIdentifier);
   
+};
+
+
+class LicenseResponseDto : public oatpp::DTO {
+
+    DTO_INIT(LicenseResponseDto, DTO)
+
+    DTO_FIELD(String, licenseFileContent);
+
 };
 
 #include OATPP_CODEGEN_END(DTO)

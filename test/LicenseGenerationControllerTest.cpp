@@ -1,15 +1,16 @@
-#include "MyControllerTest.hpp"
+#include "LicenseGenerationControllerTest.hpp"
 
-#include "controller/MyController.hpp"
+#include "controller/LicenseGenerationController.hpp"
 
-#include "app/MyApiTestClient.hpp"
 #include "app/TestComponent.hpp"
 
 #include "oatpp/web/client/HttpRequestExecutor.hpp"
 
 #include "oatpp-test/web/ClientServerTestRunner.hpp"
 
-void MyControllerTest::onRun() {
+#include "client/LicenseRequestClient.hpp"
+
+void LicenseGenerationControllerTest::onRun() {
 
   /* Register test components */
   TestComponent component;
@@ -17,8 +18,8 @@ void MyControllerTest::onRun() {
   /* Create client-server test runner */
   oatpp::test::web::ClientServerTestRunner runner;
 
-  /* Add MyController endpoints to the router of the test server */
-  runner.addController(std::make_shared<MyController>());
+  /* Add LicenseGenerationController endpoints to the router of the test server */
+  runner.addController(std::make_shared<LicenseGenerationController>());
 
   /* Run test */
   runner.run([this, &runner] {
@@ -33,22 +34,24 @@ void MyControllerTest::onRun() {
     auto requestExecutor = oatpp::web::client::HttpRequestExecutor::createShared(clientConnectionProvider);
 
     /* Create Test API client */
-    auto client = MyApiTestClient::createShared(requestExecutor, objectMapper);
+    auto client = LicenseRequestClient::createShared(requestExecutor, objectMapper);
+
+    auto requestDto = LicenseRequestDto::createShared();
+    requestDto->hardwareIdentifier = "b"; // call olm::identify_pc()
 
     /* Call server API */
-    /* Call root endpoint of MyController */
-    auto response = client->getRoot();
+    /* Call root endpoint of LicenseGenerationController */
+    auto response = client->putLicenseRequest(requestDto);
 
     /* Assert that server responds with 200 */
     OATPP_ASSERT(response->getStatusCode() == 200);
 
     /* Read response body as MessageDto */
-    auto message = response->readBodyToDto<oatpp::Object<MyDto>>(objectMapper.get());
+    auto message = response->readBodyToDto<oatpp::Object<LicenseResponseDto>>(objectMapper.get());
 
     /* Assert that received message is as expected */
     OATPP_ASSERT(message);
-    OATPP_ASSERT(message->statusCode == 200);
-    OATPP_ASSERT(message->message == "Hello World!");
+    OATPP_ASSERT(message->licenseFileContent == "z");
 
   }, std::chrono::minutes(10) /* test timeout */);
 

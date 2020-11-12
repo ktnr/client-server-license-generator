@@ -1,4 +1,4 @@
-#include "./controller/MyController.hpp"
+#include "./controller/LicenseGenerationController.hpp"
 #include "./AppComponent.hpp"
 
 #include "oatpp/network/Server.hpp"
@@ -13,8 +13,8 @@ void run() {
   /* Get router component */
   OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router);
 
-  /* Create MyController and add all of its endpoints to router */
-  auto myController = std::make_shared<MyController>();
+  /* Create LicenseGenerationController and add all of its endpoints to router */
+  auto myController = std::make_shared<LicenseGenerationController>();
   myController->addEndpointsToRouter(router);
 
   /* Get connection handler component */

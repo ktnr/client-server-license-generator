@@ -1,10 +1,10 @@
 
-#include "MyControllerTest.hpp"
+#include "LicenseGenerationControllerTest.hpp"
 
 #include <iostream>
 
 void runTests() {
-  OATPP_RUN_TEST(MyControllerTest);
+  OATPP_RUN_TEST(LicenseGenerationControllerTest);
 }
 
 int main() {
