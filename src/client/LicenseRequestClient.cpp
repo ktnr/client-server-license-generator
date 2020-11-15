@@ -13,7 +13,7 @@ std::shared_ptr<oatpp::web::client::RequestExecutor> createOatppExecutor() {
     return oatpp::web::client::HttpRequestExecutor::createShared(connectionProvider);
 }
 
-std::string LicenseRequestClientInterface::RequestLicense(std::string hardwareIdentifier)
+std::string LicenseRequestClientInterface::RequestLicense(std::string authenticationToken, std::string hardwareIdentifier)
 {
     oatpp::base::Environment::init();
 
@@ -29,12 +29,13 @@ std::string LicenseRequestClientInterface::RequestLicense(std::string hardwareId
     auto client = LicenseRequestClient::createShared(requestExecutor, objectMapper);
 
     auto requestDto = LicenseRequestDto::createShared();
+    requestDto->hardwareIdentifier = oatpp::String(hardwareIdentifier.c_str());
 
     auto responsteDto = client->putLicenseRequest(requestDto);
 
     auto responseDto = responsteDto->readBodyToDto<oatpp::Object<LicenseResponseDto>>(objectMapper.get());
 
-    std::string licenseAsString = "z";
+    std::string licenseAsString = responseDto->licenseFileContent->c_str();
 
     oatpp::base::Environment::destroy();
 

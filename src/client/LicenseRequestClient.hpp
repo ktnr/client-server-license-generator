@@ -12,7 +12,7 @@ typedef oatpp::web::protocol::http::incoming::Response Response;
 class LicenseRequestClientInterface
 {
 public:
-    std::string RequestLicense(std::string hardwareIdentifier);
+    std::string RequestLicense(std::string authenticationToken, std::string hardwareIdentifier);
 };
 
 /* Begin Api Client code generation */

@@ -10,6 +10,8 @@
 
 #include "client/LicenseRequestClient.hpp"
 
+#include "license\Request.hpp"
+
 void LicenseGenerationControllerTest::onRun() {
 
   /* Register test components */
@@ -37,7 +39,13 @@ void LicenseGenerationControllerTest::onRun() {
     auto client = LicenseRequestClient::createShared(requestExecutor, objectMapper);
 
     auto requestDto = LicenseRequestDto::createShared();
-    requestDto->hardwareIdentifier = "b"; // call olm::identify_pc()
+
+    RequestHandler requestHandler;
+    std::optional<std::string> machineIdentifier = requestHandler.RetrieveMachineIdentifier();
+
+    requestDto->hardwareIdentifier = machineIdentifier.value().c_str(); // call olm::identify_pc()
+
+    std::string authenticationToken = "X";
 
     /* Call server API */
     /* Call root endpoint of LicenseGenerationController */
@@ -51,7 +59,15 @@ void LicenseGenerationControllerTest::onRun() {
 
     /* Assert that received message is as expected */
     OATPP_ASSERT(message);
-    OATPP_ASSERT(message->licenseFileContent == "z");
+    OATPP_LOGD("License file content", message->licenseFileContent->c_str());
+
+    std::string licenseFileContent = message->licenseFileContent->c_str();
+
+    OATPP_ASSERT(licenseFileContent.find(machineIdentifier.value()) != std::string::npos); // Hardware identifiert matches the request.
+
+    std::ofstream out("client-" + authenticationToken + ".lic");
+    out << licenseFileContent;
+    out.close();
 
   }, std::chrono::minutes(10) /* test timeout */);
 

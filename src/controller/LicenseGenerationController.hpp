@@ -7,6 +7,13 @@
 #include "oatpp/core/macro/codegen.hpp"
 #include "oatpp/core/macro/component.hpp"
 
+#include <string>
+#include <fstream>
+#include <sstream>
+
+#include <filesystem>
+#include <iostream>
+
 #include OATPP_CODEGEN_BEGIN(ApiController) //<-- Begin Codegen
 
 /**
@@ -27,7 +34,32 @@ public:
       BODY_DTO(Object<LicenseRequestDto>, requestDto))
   {
       std::string hardwareId = std::string(requestDto->hardwareIdentifier->c_str());
-      std::string licenseFileContent = "z"; // call "lccgen license issue --client-signature <hardwareId> -o licenses/{license-file-name}.lic". Must we invoke the .exe here or can we get it via an interface?
+      std::string authenticationToken = "X";
+      std::string licenseFileName = "tmp-" + authenticationToken + ".lic";
+
+      std::string lccCall = "C:/Users/Leo/Source/Repos/ktnr/client-server-license-generator/out/build/x64-Debug/extern/open-license-manager/extern/license-generator/src/license_generator/lccgen license issue --primary-key C:/Users/Leo/Source/Repos/ktnr/client-server-license-generator/projects/DEFAULT/private_key.rsa --client-signature " + hardwareId + " -o " + licenseFileName.c_str();
+
+      system(lccCall.c_str());
+
+      std::string licenseFileContent;
+
+      {
+          std::ifstream t(licenseFileName.c_str());
+          std::stringstream buffer;
+          buffer << t.rdbuf();
+
+          licenseFileContent = buffer.str();
+      }
+
+      try {
+          if (std::filesystem::remove(licenseFileName))
+              std::cout << "file " << licenseFileName << " deleted.\n";
+          else
+              std::cout << "file " << licenseFileName << " not found.\n";
+      }
+      catch (const std::filesystem::filesystem_error& err) {
+          std::cout << "filesystem error: " << err.what() << '\n';
+      }
 
       Object<LicenseResponseDto> packingResponseDto = LicenseResponseDto::createShared();
       packingResponseDto->licenseFileContent = oatpp::String(licenseFileContent.c_str());
