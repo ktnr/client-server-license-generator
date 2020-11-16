@@ -23,5 +23,7 @@ int main() {
 
   oatpp::base::Environment::destroy();
 
+  // Add test to check if the license validation works correctly: LICENSE_OK?
+
   return 0;
 }
