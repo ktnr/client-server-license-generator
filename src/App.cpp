@@ -1,4 +1,4 @@
-#include "./controller/LicenseGenerationController.hpp"
+#include "./server/LicenseGenerationController.hpp"
 #include "./AppComponent.hpp"
 
 #include "oatpp/network/Server.hpp"

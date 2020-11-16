@@ -1,6 +1,6 @@
 #include "LicenseGenerationControllerTest.hpp"
 
-#include "controller/LicenseGenerationController.hpp"
+#include "server/LicenseGenerationController.hpp"
 
 #include "app/TestComponent.hpp"
 

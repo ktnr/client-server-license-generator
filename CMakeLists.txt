@@ -8,8 +8,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_library(${project_name}-lib
         src/AppComponent.hpp
-        src/controller/LicenseGenerationController.cpp
-        src/controller/LicenseGenerationController.hpp
+        src/server/LicenseGenerationController.cpp
+        src/server/LicenseGenerationController.hpp
         src/dto/DTOs.hpp
 )
 

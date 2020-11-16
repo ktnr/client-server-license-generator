@@ -1,52 +1,49 @@
-# oatpp-starter [![Build Status](https://dev.azure.com/lganzzzo/lganzzzo/_apis/build/status/oatpp.oatpp-starter?branchName=master)](https://dev.azure.com/lganzzzo/lganzzzo/_build/latest?definitionId=10&branchName=master)
-
-Starter project of oat++ (AKA oatpp) application. Based on oatpp Multithreaded (Simple) API.
-
-See more:
-
+# Preqreuqisites
+## Oat++
 - [Oat++ Website](https://oatpp.io/)
 - [Oat++ Github Repository](https://github.com/oatpp/oatpp)
 - [Get Started](https://oatpp.io/docs/start)
 
-## Overview
+## open-license-manager
 
-### Project layout
+- [Open License Manager Documentation](http://open-license-manager.github.io/open-license-manager/)
+- [Open License Manager Github Repository](https://github.com/open-license-manager/open-license-manager)
+
+
+
+
+# Overview
+
+This project is based on the [starter project of oat++ (AKA oatpp)](https://github.com/oatpp/oatpp-starter) application.
+
+## Project layout
 
 ```
-|- CMakeLists.txt                        // projects CMakeLists.txt
+|- CMakeLists.txt							// projects CMakeLists.txt
 |- src/
 |    |
-|    |- controller/                      // Folder containing MyController where all endpoints are declared
-|    |- dto/                             // DTOs are declared here
-|    |- AppComponent.hpp                 // Service config
-|    |- App.cpp                          // main() is here
+|    |- client/								// wants to request a license
+|    |- dto/								// data transfer object containing hardware identifiers and license file content
+|    |- license/							// client-side main(). Issues a license request to the server. Transfers the hardware identifier.
+|    |- server/								// issues a license given the client's hardware identifier
+|    |- AppComponent.hpp					// service config
+|    |- App.cpp								// server-side main(). Starts the server and listens for requests.
 |
-|- test/                                 // test folder
-|- utility/install-oatpp-modules.sh      // utility script to install required oatpp-modules.  
+|- test/                                 
+|	 |- app/								// local simulation of client-server network. Similar to AppComponent.hpp.
+|	 |- LicenseGenerationControllerTest.cpp // client-server communication test wirh locally simulated network.
+|- utility/install-oatpp-modules.sh			// utility script to install required oatpp-modules.  
 ```
 
----
 
-### Build and Run
+## Build and Run
 
-#### Using CMake
+Currently only works in Debug
 
-**Requires** 
+- Follow instructions on [Oat++ Github Repository](https://github.com/oatpp/oatpp).
+- Consult the Open License Manager [Repository](https://github.com/open-license-manager/open-license-manager) and [Documentation](http://open-license-manager.github.io/open-license-manager/) the [submodule example of Open License Manager](https://github.com/open-license-manager/examples/tree/develop/submodule).
+- Adjust any hardcoded paths (sorry)
+- Run `tests.cpp` to simulate client-server communication locally to generate a licnese
 
-- `oatpp` module installed. You may run `utility/install-oatpp-modules.sh` 
-script to install required oatpp modules.
-
-```
-$ mkdir build && cd build
-$ cmake ..
-$ make 
-$ ./my-project-exe  # - run application.
-
-```
-
-#### In Docker
-
-```
-$ docker build -t oatpp-starter .
-$ docker run -p 8000:8000 -t oatpp-starter
-```
+## TODO
+- Add [authentication/authorization](https://oatpp.io/docs/components/api-controller/#authorization-bearer)

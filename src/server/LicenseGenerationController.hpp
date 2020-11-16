@@ -33,6 +33,8 @@ public:
   ENDPOINT("PUT", "/generateLicense", generateLicense,
       BODY_DTO(Object<LicenseRequestDto>, requestDto))
   {
+      // Add authorization according to https://oatpp.io/docs/components/api-controller/#authorization-bearer
+
       std::string hardwareId = std::string(requestDto->hardwareIdentifier->c_str());
       std::string authenticationToken = "X";
       std::string licenseFileName = "tmp-" + authenticationToken + ".lic";
@@ -51,7 +53,8 @@ public:
           licenseFileContent = buffer.str();
       }
 
-      try {
+      try 
+      {
           if (std::filesystem::remove(licenseFileName))
               std::cout << "file " << licenseFileName << " deleted.\n";
           else
