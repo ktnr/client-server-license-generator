@@ -45,11 +45,11 @@ void LicenseGenerationControllerTest::onRun() {
 
     requestDto->hardwareIdentifier = machineIdentifier.value().c_str(); // call olm::identify_pc()
 
-    std::string authenticationToken = "X";
+    std::string authToken = "4e99e8c12de7e01535248d2bac85e732";
 
     /* Call server API */
     /* Call root endpoint of LicenseGenerationController */
-    auto response = client->putLicenseRequest(requestDto);
+    auto response = client->putLicenseRequest(requestDto, authToken.c_str());
 
     /* Assert that server responds with 200 */
     OATPP_ASSERT(response->getStatusCode() == 200);
@@ -63,9 +63,16 @@ void LicenseGenerationControllerTest::onRun() {
 
     std::string licenseFileContent = message->licenseFileContent->c_str();
 
+    if (licenseFileContent == "")
+    {
+        std::cout << "License request failed\n";
+        OATPP_ASSERT(false);
+    }
+
     OATPP_ASSERT(licenseFileContent.find(machineIdentifier.value()) != std::string::npos); // Hardware identifiert matches the request.
 
-    std::ofstream out("client-" + authenticationToken + ".lic");
+
+    std::ofstream out("client-" + authToken + ".lic");
     out << licenseFileContent;
     out.close();
 

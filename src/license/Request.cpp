@@ -16,6 +16,7 @@ std::string RequestHandler::SendLicenseRequest(std::string authenticationCode)
     LicenseRequestClientInterface client;
     auto licenseFileContent = client.RequestLicense(authenticationCode, machineIdentifier.value());
 
+    // fill string
     return std::string();
 }
 
@@ -29,6 +30,7 @@ std::optional<std::string> RequestHandler::RetrieveMachineIdentifier()
     if (!success)
     {
         // Log
+        // throw exception?
     }
 
     return std::string(pc_identifier);

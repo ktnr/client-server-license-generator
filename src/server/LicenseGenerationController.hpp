@@ -13,6 +13,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include <oatpp\web\server\handler\AuthorizationHandler.hpp>
 
 #include OATPP_CODEGEN_BEGIN(ApiController) //<-- Begin Codegen
 
@@ -27,13 +28,26 @@ public:
    */
   LicenseGenerationController(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, objectMapper))
     : oatpp::web::server::api::ApiController(objectMapper)
-  {}
+  {
+      setDefaultAuthorizationHandler(std::make_shared<oatpp::web::server::handler::BearerAuthorizationHandler>("license-generator"));
+  }
+
 public:
 
   ENDPOINT("PUT", "/generateLicense", generateLicense,
+      AUTHORIZATION(std::shared_ptr<oatpp::web::server::handler::DefaultBearerAuthorizationObject>, authObject), 
       BODY_DTO(Object<LicenseRequestDto>, requestDto))
   {
+      // Check if there is an entry in the db that matches authObject->token
       // Add authorization according to https://oatpp.io/docs/components/api-controller/#authorization-bearer
+      OATPP_ASSERT_HTTP(authObject->token == "4e99e8c12de7e01535248d2bac85e732", Status::CODE_401, "Unauthorized");
+      if (authObject->token != "4e99e8c12de7e01535248d2bac85e732")
+      {
+          Object<LicenseResponseDto> packingResponseDto = LicenseResponseDto::createShared();
+          packingResponseDto->licenseFileContent = "";
+
+          return createDtoResponse(Status::CODE_401, packingResponseDto);
+      }
 
       std::string hardwareId = std::string(requestDto->hardwareIdentifier->c_str());
       std::string authenticationToken = "X";
@@ -63,6 +77,8 @@ public:
       catch (const std::filesystem::filesystem_error& err) {
           std::cout << "filesystem error: " << err.what() << '\n';
       }
+
+      licenseFileContent = licenseFileContent + "token = " + authObject->token->c_str();
 
       Object<LicenseResponseDto> packingResponseDto = LicenseResponseDto::createShared();
       packingResponseDto->licenseFileContent = oatpp::String(licenseFileContent.c_str());

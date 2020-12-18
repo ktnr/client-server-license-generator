@@ -26,7 +26,7 @@ class LicenseRequestClient : public oatpp::web::client::ApiClient {
 
     API_CLIENT_INIT(LicenseRequestClient)
 
-    API_CALL("PUT", "/generateLicense", putLicenseRequest, BODY_DTO(Object<LicenseRequestDto>, licenseRequestDto))
+    API_CALL("PUT", "/generateLicense", putLicenseRequest, BODY_DTO(Object<LicenseRequestDto>, licenseRequestDto), AUTHORIZATION(String, token, "Bearer"))
 };
 
 /* End Api Client code generation */

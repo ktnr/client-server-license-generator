@@ -31,9 +31,15 @@ std::string LicenseRequestClientInterface::RequestLicense(std::string authentica
     auto requestDto = LicenseRequestDto::createShared();
     requestDto->hardwareIdentifier = oatpp::String(hardwareIdentifier.c_str());
 
-    auto responsteDto = client->putLicenseRequest(requestDto);
+    auto response = client->putLicenseRequest(requestDto, authenticationToken.c_str());
 
-    auto responseDto = responsteDto->readBodyToDto<oatpp::Object<LicenseResponseDto>>(objectMapper.get());
+    if (response->getStatusCode() != 200)
+    {
+        // license retrieval failed. Log.
+        return "";
+    }
+
+    auto responseDto = response->readBodyToDto<oatpp::Object<LicenseResponseDto>>(objectMapper.get());
 
     std::string licenseAsString = responseDto->licenseFileContent->c_str();
 
