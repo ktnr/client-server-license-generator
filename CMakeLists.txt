@@ -11,7 +11,7 @@ add_library(${project_name}-lib
         src/server/LicenseGenerationController.cpp
         src/server/LicenseGenerationController.hpp
         src/dto/DTOs.hpp
-)
+ "src/service/TokenService.hpp")
 
 ## link libs
 
@@ -29,8 +29,10 @@ target_include_directories(${project_name}-lib PUBLIC src)
 add_executable(${project_name}-exe
         src/App.cpp
         src/client/LicenseRequestClient.hpp
-        src/client/LicenseRequestClient.cpp)
+        src/client/LicenseRequestClient.cpp 
+        src/service/TokenService.hpp)
 target_link_libraries(${project_name}-exe ${project_name}-lib)
+target_include_directories(${project_name}-exe PUBLIC include)
 add_dependencies(${project_name}-exe ${project_name}-lib)
 
 
@@ -59,11 +61,13 @@ src/license/main.cpp
 src/client/LicenseRequestClient.hpp
 src/client/LicenseRequestClient.cpp
 src/license/Request.hpp
-src/license/Request.cpp)
+src/license/Request.cpp 
+src/service/TokenService.hpp)
 cmake_policy(SET CMP0028 NEW)
 target_link_libraries(request_license 
 licensecc::licensecc_static
 oatpp::oatpp)
+target_include_directories(request_license PUBLIC include)
 
 #run open-license-manager tests
 INCLUDE(CTest)
@@ -79,7 +83,8 @@ add_executable(${project_name}-test
         src/client/LicenseRequestClient.hpp
         src/client/LicenseRequestClient.cpp
         src/license/Request.hpp
-        src/license/Request.cpp)
+        src/license/Request.cpp 
+        src/service/TokenService.hpp)
 
 target_link_libraries(${project_name}-test ${project_name}-lib 
 licensecc::licensecc_static)
