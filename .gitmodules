@@ -1,3 +1,6 @@
 [submodule "extern/open-license-manager"]
 	path = extern/open-license-manager
 	url = https://github.com/open-license-manager/open-license-manager
+[submodule "extern/oatpp-sqlite"]
+	path = extern/oatpp-sqlite
+	url = https://github.com/oatpp/oatpp-sqlite.git
